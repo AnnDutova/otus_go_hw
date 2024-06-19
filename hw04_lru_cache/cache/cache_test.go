@@ -6,8 +6,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/AnnDutova/otus_go_hw/hw04_lru_cache/cache"
 	"github.com/stretchr/testify/require"
+
+	"github.com/AnnDutova/otus_go_hw/hw04_lru_cache/cache"
 )
 
 func TestCache(t *testing.T) {

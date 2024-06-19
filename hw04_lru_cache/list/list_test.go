@@ -3,8 +3,9 @@ package list_test
 import (
 	"testing"
 
-	"github.com/AnnDutova/otus_go_hw/hw04_lru_cache/list"
 	"github.com/stretchr/testify/require"
+
+	"github.com/AnnDutova/otus_go_hw/hw04_lru_cache/list"
 )
 
 func TestList(t *testing.T) {
