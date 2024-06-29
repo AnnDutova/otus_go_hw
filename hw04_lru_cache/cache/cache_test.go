@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/AnnDutova/otus_go_hw/hw04_lru_cache/cache"
+	"github.com/AnnDutova/otus_go_hw/hw04_lru_cache/list"
 )
 
 func TestCache(t *testing.T) {
@@ -103,14 +104,14 @@ func TestCacheMultithreading(_ *testing.T) {
 	go func() {
 		defer wg.Done()
 		for i := 0; i < 1_000_000; i++ {
-			c.Set(cache.Key(strconv.Itoa(i)), i)
+			c.Set(list.Key(strconv.Itoa(i)), i)
 		}
 	}()
 
 	go func() {
 		defer wg.Done()
 		for i := 0; i < 1_000_000; i++ {
-			c.Get(cache.Key(strconv.Itoa(rand.Intn(1_000_000))))
+			c.Get(list.Key(strconv.Itoa(rand.Intn(1_000_000))))
 		}
 	}()
 

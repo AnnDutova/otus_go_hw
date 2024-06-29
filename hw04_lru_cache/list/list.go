@@ -1,29 +1,30 @@
 package list
 
-import "fmt"
+type (
+	List interface {
+		Len() int
+		Front() *Item
+		Back() *Item
+		PushFront(v interface{}) *Item
+		PushBack(v interface{}) *Item
+		Remove(i *Item)
+		MoveToFront(i *Item)
+	}
 
-type List interface {
-	Len() int
-	Front() *Item
-	Back() *Item
-	PushFront(v interface{}) *Item
-	PushBack(v interface{}) *Item
-	Remove(i *Item)
-	MoveToFront(i *Item)
-	PrintList()
-}
+	Key  string
+	Item struct {
+		Value interface{}
+		Key   Key
+		Next  *Item
+		Prev  *Item
+	}
 
-type Item struct {
-	Value interface{}
-	Next  *Item
-	Prev  *Item
-}
-
-type list struct {
-	head *Item
-	tail *Item
-	len  int
-}
+	list struct {
+		head *Item
+		tail *Item
+		len  int
+	}
+)
 
 func (l *list) Len() int {
 	return l.len
@@ -119,16 +120,4 @@ func (l *list) MoveToFront(i *Item) {
 
 func NewList() List {
 	return new(list)
-}
-
-func (l *list) PrintList() {
-	start := l.head
-	var res string
-	var i int
-	for start != nil {
-		res += fmt.Sprintf("elem[%d]: %v ", i, start.Value.(int))
-		i++
-		start = start.Next
-	}
-	fmt.Println(res)
 }
