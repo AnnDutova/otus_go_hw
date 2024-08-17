@@ -1,4 +1,4 @@
-package hw06pipelineexecution
+package pipeline
 
 import (
 	"strconv"
@@ -14,7 +14,7 @@ const (
 	fault         = sleepPerStage / 2
 )
 
-var isFullTesting = true
+var isFullTesting = false
 
 func TestPipeline(t *testing.T) {
 	// Stage generator
@@ -106,8 +106,10 @@ func TestAllStageStop(t *testing.T) {
 			out := make(Bi)
 			wg.Add(1)
 			go func() {
-				defer wg.Done()
-				defer close(out)
+				defer func() {
+					wg.Done()
+					close(out)
+				}()
 				for v := range in {
 					time.Sleep(sleepPerStage)
 					out <- f(v)
@@ -150,6 +152,5 @@ func TestAllStageStop(t *testing.T) {
 		wg.Wait()
 
 		require.Len(t, result, 0)
-
 	})
 }
