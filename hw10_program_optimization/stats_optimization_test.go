@@ -1,7 +1,7 @@
 //go:build bench
 // +build bench
 
-package hw10programoptimization
+package programoptimization
 
 import (
 	"archive/zip"
