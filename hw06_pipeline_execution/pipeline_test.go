@@ -14,7 +14,7 @@ const (
 	fault         = sleepPerStage / 2
 )
 
-var isFullTesting = false
+var isFullTesting = true
 
 func TestPipeline(t *testing.T) {
 	// Stage generator
@@ -38,6 +38,38 @@ func TestPipeline(t *testing.T) {
 		g("Adder (+ 100)", func(v interface{}) interface{} { return v.(int) + 100 }),
 		g("Stringifier", func(v interface{}) interface{} { return strconv.Itoa(v.(int)) }),
 	}
+	t.Run("empty stages", func(t *testing.T) {
+		var emptyStages []Stage
+		in := make(Bi)
+		data := []int{1, 2, 3, 4, 5}
+
+		go func() {
+			for _, v := range data {
+				in <- v
+			}
+			close(in)
+		}()
+
+		result := make([]int, 0, 5)
+		for s := range ExecutePipeline(in, nil, emptyStages...) {
+			result = append(result, s.(int))
+		}
+
+		require.Equal(t, []int{1, 2, 3, 4, 5}, result)
+	})
+
+	t.Run("nil in channel", func(t *testing.T) {
+		done := make(Bi)
+		in := make(Bi)
+		close(in)
+
+		result := make([]string, 0, 5)
+		for s := range ExecutePipeline(in, done, stages...) {
+			result = append(result, s.(string))
+		}
+
+		require.Len(t, result, 0)
+	})
 
 	t.Run("simple case", func(t *testing.T) {
 		in := make(Bi)
