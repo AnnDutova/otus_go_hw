@@ -26,10 +26,10 @@ func TestTelnetClient(t *testing.T) {
 			in := &bytes.Buffer{}
 			out := &bytes.Buffer{}
 
-			timeout, err := time.ParseDuration("10s")
+			timeoutFlag, err := time.ParseDuration("10s")
 			require.NoError(t, err)
 
-			client := NewTelnetClient(l.Addr().String(), timeout, io.NopCloser(in), out)
+			client := NewTelnetClient(l.Addr().String(), timeoutFlag, io.NopCloser(in), out)
 			require.NoError(t, client.Connect())
 			defer func() { require.NoError(t, client.Close()) }()
 
@@ -61,5 +61,16 @@ func TestTelnetClient(t *testing.T) {
 		}()
 
 		wg.Wait()
+	})
+
+	t.Run("invalid telnet client connection", func(t *testing.T) {
+		in := &bytes.Buffer{}
+		out := &bytes.Buffer{}
+
+		timeoutFlag, err := time.ParseDuration("10s")
+		require.NoError(t, err)
+
+		client := NewTelnetClient("invalidhost:4242", timeoutFlag, io.NopCloser(in), out)
+		require.Error(t, client.Connect())
 	})
 }
